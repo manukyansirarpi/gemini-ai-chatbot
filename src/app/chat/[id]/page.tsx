@@ -6,16 +6,12 @@ const getChatSessionDetails = async (id: string) => {
   return res.json();
 };
 
-interface ChatSessionDetailsProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function ChatSessionDetails({
+export default async function Page({
   params,
-}: ChatSessionDetailsProps) {
-  const { id } = await params;
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = (await params).id;
   const { chatSession } = await getChatSessionDetails(id);
 
   if (chatSession?.errMessage) {
