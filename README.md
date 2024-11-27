@@ -57,4 +57,4 @@ bun dev
 ## Conclusion
 Gemini AI Chatbot leverages modern web technologies to provide a seamless and interactive chatbot experience. The project demonstrates the integration of AI capabilities and efficient state management in a web application.
 
-demo - https://youtu.be/xFPWEwvUm8k
+demo - https://youtu.be/c0gHTh2lJ5o
