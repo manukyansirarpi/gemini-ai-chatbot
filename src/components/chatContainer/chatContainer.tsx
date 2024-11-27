@@ -49,6 +49,9 @@ const ChatContainer = ({ chatSessionId, history }: ChatContainerProps) => {
       },
       body: JSON.stringify({ messages: messages }),
     });
+
+    window.location.reload(); // TO DO: replace with context api solution, put this due to lack of time
+
     if (!res.ok) {
       console.error("Failed to update messages");
     }
