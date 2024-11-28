@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChatSessionI } from "@/models/Chat";
 import { RefreshChatHistoryContext } from "@/contexts/ChatHistoryContext";
 
 const ChatSessionList = () => {
   const router = useRouter();
+  const { triggerRefresh, refresh, activeChatSessionId, setActiveChatSession } =
+    useContext(RefreshChatHistoryContext);
   const [chatSessions, setChatSessions] = useState<ChatSessionI[]>([]);
-  const { triggerRefresh, refresh } = useContext(RefreshChatHistoryContext);
 
   const fetchChatSessions = async () => {
     try {
@@ -44,6 +44,11 @@ const ChatSessionList = () => {
     }
   };
 
+  const handleSetActiveChatSession = (chatSessionId: string) => {
+    setActiveChatSession(chatSessionId);
+    router.push(`/chat/${chatSessionId}`);
+  };
+
   return (
     <div className="p-4 h-full">
       <div className="flex justify-between">
@@ -61,15 +66,28 @@ const ChatSessionList = () => {
           chatSessions.map((chatSession: ChatSessionI) => (
             <li
               key={chatSession._id.toString()}
-              className="p-3 bg-white shadow-md rounded-md cursor-pointer hover:bg-gray-200"
+              onClick={() =>
+                handleSetActiveChatSession(chatSession._id.toString())
+              }
+              className={`p-3  shadow-md rounded-md cursor-pointer hover:bg-gray-200 ${
+                chatSession._id.toString() === activeChatSessionId
+                  ? "bg-gray-400  hover:bg-gray-400"
+                  : "bg-white"
+              }`}
             >
-              <Link href={`/chat/${chatSession._id}`}>
-                <div className="text-sm text-gray-600 truncate">
+              <button>
+                <div
+                  className={`text-sm  truncate ${
+                    chatSession._id.toString() === activeChatSessionId
+                      ? "text-white"
+                      : "text-gray-600"
+                  }`}
+                >
                   {chatSession.history.length > 0
                     ? chatSession.history[0].content
                     : "No messages"}
                 </div>
-              </Link>
+              </button>
             </li>
           ))
         ) : (
