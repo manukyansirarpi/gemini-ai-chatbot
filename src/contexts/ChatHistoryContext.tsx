@@ -1,14 +1,21 @@
 "use client";
-import { createContext, useState } from "react";
 
-export const RefreshChatHistoryContext = createContext({
-  triggerRefresh: (refresh: boolean) => {},
-  refresh: false,
-});
+import { createContext, useState, ReactNode } from "react";
 
 interface RefreshChatHistoryContextProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
+
+interface RefreshChatHistoryContextType {
+  triggerRefresh: (refresh: boolean) => void;
+  refresh: boolean;
+}
+
+export const RefreshChatHistoryContext =
+  createContext<RefreshChatHistoryContextType>({
+    triggerRefresh: () => {},
+    refresh: false,
+  });
 
 export const RefreshChatHistoryProvider = ({
   children,
