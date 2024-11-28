@@ -38,6 +38,7 @@ const ChatSessionList = () => {
       });
       const chatSession = await response.json();
       setChatSessions([...chatSessions, chatSession.chatSession]);
+      setActiveChatSession(chatSession.chatSession._id);
       router.push(`/chat/${chatSession.chatSession._id}`);
     } catch (error) {
       console.error("Failed to create new chat session:", error);
