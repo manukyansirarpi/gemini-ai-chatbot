@@ -8,32 +8,23 @@ import { RefreshChatHistoryContext } from "@/contexts/ChatHistoryContext";
 const ChatSessionList = () => {
   const router = useRouter();
   const [chatSessions, setChatSessions] = useState<ChatSessionI[]>([]);
-
   const { triggerRefresh, refresh } = useContext(RefreshChatHistoryContext);
 
+  const fetchChatSessions = async () => {
+    try {
+      const response = await fetch("/api/chat/all");
+      const chatSessions = await response.json();
+      setChatSessions(chatSessions.chatSessions);
+    } catch (error) {
+      console.error("Failed to fetch chat sessions:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchChatSessions = async () => {
-      try {
-        const response = await fetch("/api/chat/all");
-        const chatSessions = await response.json();
-        setChatSessions(chatSessions.chatSessions);
-      } catch (error) {
-        console.error("Failed to fetch chat sessions:", error);
-      }
-    };
     fetchChatSessions();
   }, []);
 
   useEffect(() => {
-    const fetchChatSessions = async () => {
-      try {
-        const response = await fetch("/api/chat/all");
-        const chatSessions = await response.json();
-        setChatSessions(chatSessions.chatSessions);
-      } catch (error) {
-        console.error("Failed to fetch chat sessions:", error);
-      }
-    };
     if (refresh) {
       fetchChatSessions();
       triggerRefresh(false);
@@ -58,7 +49,7 @@ const ChatSessionList = () => {
       <div className="flex justify-between">
         <h2 className="text-lg font-bold mb-4">Chat History</h2>
         <button
-          onClick={() => handleNewChatSession()}
+          onClick={handleNewChatSession}
           className="p-2 rounded hover:bg-gray-200 focus:outline-none"
         >
           <Pencil />
