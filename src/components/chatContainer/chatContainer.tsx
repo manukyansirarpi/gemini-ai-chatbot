@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import { Message, useChat } from "ai/react";
 
 import { Send, Loader2, CircleStop } from "lucide-react";
 import MessageList from "./messageList";
+import { RefreshChatHistoryContext } from "@/contexts/ChatHistoryContext";
 
 interface ChatContainerProps {
   chatSessionId: string;
@@ -25,6 +26,7 @@ const ChatContainer = ({ chatSessionId, history }: ChatContainerProps) => {
     api: "/api/chat",
   });
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { triggerRefresh } = useContext(RefreshChatHistoryContext);
 
   useEffect(() => {
     if (history.length > 0) {
@@ -49,6 +51,9 @@ const ChatContainer = ({ chatSessionId, history }: ChatContainerProps) => {
       },
       body: JSON.stringify({ messages: messages }),
     });
+
+    triggerRefresh(true);
+
     if (!res.ok) {
       console.error("Failed to update messages");
     }

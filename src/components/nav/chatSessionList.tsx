@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChatSessionI } from "@/models/Chat";
+import { RefreshChatHistoryContext } from "@/contexts/ChatHistoryContext";
 
 const ChatSessionList = () => {
   const router = useRouter();
   const [chatSessions, setChatSessions] = useState<ChatSessionI[]>([]);
+
+  const { triggerRefresh, refresh } = useContext(RefreshChatHistoryContext);
 
   useEffect(() => {
     const fetchChatSessions = async () => {
@@ -18,9 +21,24 @@ const ChatSessionList = () => {
         console.error("Failed to fetch chat sessions:", error);
       }
     };
-
     fetchChatSessions();
   }, []);
+
+  useEffect(() => {
+    const fetchChatSessions = async () => {
+      try {
+        const response = await fetch("/api/chat/all");
+        const chatSessions = await response.json();
+        setChatSessions(chatSessions.chatSessions);
+      } catch (error) {
+        console.error("Failed to fetch chat sessions:", error);
+      }
+    };
+    if (refresh) {
+      fetchChatSessions();
+      triggerRefresh(false);
+    }
+  }, [refresh]);
 
   const handleNewChatSession = async () => {
     try {
